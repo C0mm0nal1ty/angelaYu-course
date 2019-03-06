@@ -54,7 +54,15 @@ Start up a shell
 mongo
 ```
 
-And repeat
+making the directory
+```
+mkdir fruitsprojects
+cd fruitsprojects
+npm init
+(accept all defaults)
+npm install mongoose
+```
+
 
 ```
 until finished
