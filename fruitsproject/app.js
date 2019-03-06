@@ -8,8 +8,15 @@ mongoose.connect('mongodb://localhost:27017/fruitsDB', {useNewUrlParser:true});
 
 //setup a schema (how fruits will be modeled)
 const fruitSchema = new mongoose.Schema({
-  name: String,
-  rating : Number,
+  name: {
+    type: String,
+    required: [true,'Why no name?']
+  },
+  rating : {
+    type: Number,
+    min: 1,
+    max: 10
+  },
   review : String
 });
 
@@ -86,6 +93,6 @@ const person = new Person({
   age : 24
 });
 
-person.save();
+// person.save();
 
 //EOF
