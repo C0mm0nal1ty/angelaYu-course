@@ -50,19 +50,22 @@ Fruit.insertMany([kiwi,orange,banana],function(err){
     console.log(err);
   }
   else{
-    console.log('saved all fruits to fruitsDB');
+    // console.log('');
   }
 });
 
 //finding a fruit
+//only log their names
 Fruit.find(function(err,  fruits){
   if(err){
     console.log(err);
   }
   else{
-    console.log(fruits);
+    fruits.forEach(function(elem){
+          console.log(elem.name);
+    });
   }
-})
+});
 
 
 //create person Schema
