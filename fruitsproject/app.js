@@ -61,6 +61,7 @@ Fruit.find(function(err,  fruits){
     console.log(err);
   }
   else{
+    mongoose.connection.close();
     fruits.forEach(function(elem){
           console.log(elem.name);
     });
