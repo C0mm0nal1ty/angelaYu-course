@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -63,16 +64,27 @@ app.get("/", function(req, res) {
 
 });
 
-app.post("/delete", function(req, res){
-  const checkedItemID = req.body.checkbox;
+app.get("/:customListName", function(req,res){
+  const customListName = _.capitalize(req.params.customListName);
 
-  Item.findOneAndDelete({_id: checkedItemID}, function(err){
-    if(err){
-      console.log(err);
+  List.findOne({name: customListName}, function (err,foundList){
+    if(!err){
+      if(!foundList){
+        //if no list found, create a new list
+        const list = new List({
+          name: customListName,
+          items: defaultItems
+        });
+
+        list.save();
+        res.redirect("/" + customListName);
+      }
+      else{
+        //render exisiting list
+        res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
+      }
     }
-    else{
-      res.redirect("/");
-    }
+
   });
 
 });
@@ -100,36 +112,30 @@ app.post("/", function(req, res){
 
 });
 
-app.get("/:customListName", function(req,res){
-  const customListName = req.params.customListName;
+app.post("/delete", function(req, res){
+  const checkedItemID = req.body.checkbox;
+  const listName = req.body.listName;
 
-  List.findOne({name: customListName}, function (err,foundList){
-    if(!err){
-      if(!foundList){
-        //if no list found, create a new list
-        const list = new List({
-          name: customListName,
-          items: defaultItems
-        });
-
-        list.save();
-        res.redirect("/" + customListName);
-
-
+  if(listName == "Today"){
+    Item.findByIdAndRemove({_id: checkedItemID}, function(err){
+      if(!err){
+        res.redirect("/");
       }
-      else{
-        //render exisiting list
-        res.render("list", {listTitle: foundList.name, newListItems: foundList.items});
+    });
+  }
+  else{
+    List.findOneAndUpdate({name: listName}, {$pull : {items: {_id: checkedItemID}}}, function (err,foundList){
+      if(!err){
+        res.redirect("/" + listName);
       }
-    }
-
-  });
+    });
+  }
 
 });
 
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
-});
+
+
+
 
 app.get("/about", function(req, res){
   res.render("about");

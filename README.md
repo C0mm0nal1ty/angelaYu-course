@@ -54,13 +54,24 @@ Start up a shell
 mongo
 ```
 
-making the directory
+making the fruitsprojects
 ```
 mkdir fruitsprojects
 cd fruitsprojects
 npm init
 (accept all defaults)
 npm install mongoose
+```
+
+making the todolistApp
+```
+mkdir todolistApp
+cd todolistApp
+npm init
+(accept all defaults)
+npm install mongoose
+npm install nodemon
+npm install lodash
 ```
 
 
